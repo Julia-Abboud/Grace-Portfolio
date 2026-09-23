@@ -40,8 +40,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    mix-blend-mode: multiply;
+    background: rgba(245, 241, 235, .80);
+    backdrop-filter: blur(14px) saturate(115%);
+    -webkit-backdrop-filter: blur(14px) saturate(115%);
+    border-bottom: 1px solid rgba(23, 21, 20, .08);
     pointer-events: none;
+    mix-blend-mode: normal;
   }
 
   .header-inner {
@@ -273,6 +277,65 @@
     letter-spacing: .2em;
     text-transform: uppercase;
     color: rgba(255,255,255,.62);
+  }
+
+  /* ---------- ABOUT ---------- */
+
+  .about-section {
+    padding: 100px 0 115px;
+    background: #e9e1d9;
+    border-top: 1px solid var(--line);
+  }
+
+  .about-layout {
+    display: grid;
+    grid-template-columns: .28fr .72fr;
+    gap: 5vw;
+  }
+
+  .about-content {
+    max-width: 850px;
+  }
+
+  .about-lead {
+    max-width: 790px;
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(42px, 5.3vw, 76px);
+    font-weight: 300;
+    line-height: .92;
+    letter-spacing: -.045em;
+  }
+
+  .about-lead em {
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .about-details {
+    margin: 38px 0 0 9%;
+    max-width: 580px;
+    color: #68615b;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .about-details strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .about-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    margin-top: 23px;
+    padding-top: 13px;
+    border-top: 1px solid var(--line);
+    color: #756e68;
+    font-size: 8px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
   }
 
   /* ---------- DESIGN SECTION ---------- */
@@ -781,6 +844,130 @@
     text-transform: uppercase;
   }
 
+  .contact-inner {
+    width: min(1320px, calc(100% - 54px));
+    margin: auto;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    min-height: calc(90vh - 150px);
+  }
+
+  .contact-label {
+    color: #be91a0;
+  }
+
+  .contact-main {
+    display: grid;
+    grid-template-columns: .43fr .57fr;
+    gap: 5vw;
+    align-items: center;
+    padding: 30px 0 80px;
+  }
+
+  .contact-heading {
+    margin: 0;
+    justify-self: end;
+  }
+
+  .contact-caption {
+    margin: 0;
+    max-width: 380px;
+    color: rgba(245,241,235,.58);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .contact-info {
+    margin: 0 auto 26px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 20px 42px;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  /* ---------- MOTION ---------- */
+
+  .hero-copy,
+  .hero-art,
+  .about-content,
+  .look,
+  .role,
+  .award,
+  .contact-main,
+  .contact-info {
+    animation: editorial-rise .85s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  .hero-copy { animation-delay: .08s; }
+  .hero-art { animation-delay: .18s; }
+  .about-content { animation-delay: .08s; }
+
+  @keyframes editorial-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .look-image {
+    transition: transform .65s cubic-bezier(.2,.7,.2,1), filter .65s ease;
+  }
+
+  .look:hover .look-image {
+    transform: scale(1.018);
+    filter: saturate(1.05);
+  }
+
+  .look-title,
+  .award-name,
+  .role-name,
+  .contact-link {
+    transition: transform .25s ease, letter-spacing .25s ease;
+  }
+
+  .look:hover .look-title,
+  .role:hover .role-name,
+  .award:hover .award-name {
+    transform: translateX(4px);
+  }
+
+  .hero-art {
+    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+
+  .hero-art:hover {
+    transform: translateY(-3px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-copy,
+    .hero-art,
+    .about-content,
+    .look,
+    .role,
+    .award,
+    .contact-main,
+    .contact-info {
+      animation: none;
+    }
+    .look-image,
+    .look-title,
+    .award-name,
+    .role-name,
+    .contact-link,
+    .hero-art {
+      transition: none;
+    }
+  }
+
   /* ---------- MOBILE ---------- */
 
   @media (max-width: 860px) {
@@ -918,7 +1105,7 @@
   }
 
   @media (max-width: 520px) {
-    .header-links a:nth-child(3) { display: none; }
+    .header-links a:nth-child(4) { display: none; }
 
     .hero-art { min-height: 460px; }
 
@@ -950,8 +1137,9 @@
 <header>
   <div class="header-inner">
     <div class="header-mark">G / A</div>
-    <a class="header-center" href="#top">Grace Abboud</a>
+    <a class="header-center" href="#top">Grace A. Abboud</a>
     <nav class="header-links" aria-label="Primary navigation">
+      <a href="#about">About</a>
       <a href="#designs">Designs</a>
       <a href="#experience">Experience</a>
       <a href="#awards">Awards</a>
@@ -981,6 +1169,33 @@
     <div class="hero-art" aria-label="Editorial fashion artwork">
       <div class="hero-disc"></div>
       <div class="hero-note">Material / Form / Body / Process</div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about-section">
+    <div class="page about-layout">
+      <div class="section-index small-caps">About</div>
+
+      <div class="about-content">
+        <p class="about-lead">
+          Grace A. Abboud is a fashion design student pursuing a
+          <em>BFA in Fashion Design at the Fashion Institute of Technology in New York.</em>
+        </p>
+
+        <div class="about-details">
+          <p>
+            Her work sits at the intersection of <strong>silhouette, material, and movement</strong>,
+            with an interest in turning ideas into garments that feel considered from every angle.
+          </p>
+
+          <div class="about-stats">
+            <span>FIT / New York</span>
+            <span>BFA / Fashion Design</span>
+            <span>2024—2026</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1134,22 +1349,21 @@
   <!-- CONTACT -->
   <section id="contact">
     <div class="contact-inner">
-      <div class="contact-top">
-        <div class="contact-index small-caps">Contact</div>
+      <div class="contact-label small-caps">Contact</div>
 
-        <div>
-          <h2 class="contact-heading">Let's make<br><span>something.</span></h2>
+      <div class="contact-main">
+        <p class="contact-caption">
+          Available for internships, collaborations, editorial work,
+          design opportunities, and portfolio conversations.
+        </p>
 
-          <div class="contact-info">
-            <a class="contact-link" href="Grace_Abboud_Resume.pdf" target="_blank">Resume</a>
-            <a class="contact-link" href="mailto:grace@example.com">grace@example.com</a>
-            <a class="contact-link" href="https://www.instagram.com/" target="_blank" rel="noreferrer">@graceabboud</a>
-            <p class="contact-caption">
-              Available for internships, collaborations, editorial work,
-              design opportunities, and portfolio conversations.
-            </p>
-          </div>
-        </div>
+        <h2 class="contact-heading">Let's make<br><span>something.</span></h2>
+      </div>
+
+      <div class="contact-info">
+        <a class="contact-link" href="Grace_Abboud_Resume.pdf" target="_blank">Resume</a>
+        <a class="contact-link" href="mailto:grace@example.com">grace@example.com</a>
+        <a class="contact-link" href="https://www.instagram.com/" target="_blank" rel="noreferrer">@graceabboud</a>
       </div>
 
       <div class="footer-line">
