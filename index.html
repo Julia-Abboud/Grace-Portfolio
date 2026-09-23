@@ -113,6 +113,30 @@
     transform-origin: left;
   }
 
+
+  .logo-link {
+    display: flex;
+    align-items: center;
+    width: 47px;
+    height: 27px;
+  }
+
+  .logo-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    filter: none;
+  }
+
+  .footer-logo {
+    width: 48px;
+    height: 28px;
+    object-fit: contain;
+    object-position: center;
+    opacity: .5;
+  }
+
   /* ---------- GENERAL ---------- */
 
   .page {
@@ -965,22 +989,35 @@
   .section-heading,
   .experience-title,
   .awards-heading,
-  .contact-heading {
+  .contact-heading,
+  .about-lead-title {
     color: inherit;
   }
 
+  /* Each section gets its own editorial entrance treatment. */
   .section-heading.reveal,
-  .experience-title.reveal,
-  .awards-heading.reveal,
-  .contact-heading.reveal {
-    animation: title-reveal 900ms cubic-bezier(.2,.7,.2,1) both;
+  .about-lead-title.reveal {
+    animation: title-reveal-up 900ms cubic-bezier(.2,.7,.2,1) both;
   }
 
-  @keyframes title-reveal {
+  .experience-title.reveal {
+    animation: title-reveal-side 950ms cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  .awards-heading.reveal {
+    animation: title-reveal-scale 900ms cubic-bezier(.2,.7,.2,1) both;
+    transform-origin: left center;
+  }
+
+  .contact-heading.reveal {
+    animation: title-reveal-expand 1s cubic-bezier(.16,.75,.18,1) both;
+  }
+
+  @keyframes title-reveal-up {
     from {
       opacity: 0;
-      transform: translateY(12px);
-      letter-spacing: -.035em;
+      transform: translateY(18px);
+      letter-spacing: -.025em;
     }
     to {
       opacity: 1;
@@ -989,8 +1026,43 @@
     }
   }
 
-  .about-lead-title.reveal {
-    animation: title-reveal 900ms cubic-bezier(.2,.7,.2,1) both;
+  @keyframes title-reveal-side {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes title-reveal-scale {
+    from {
+      opacity: 0;
+      transform: scale(.94);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes title-reveal-expand {
+    from {
+      opacity: 0;
+      transform: translateX(34px);
+      letter-spacing: -.08em;
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+      letter-spacing: -.065em;
+    }
+  }
+
+  .about-lead-title {
+    animation-delay: .08s;
   }
 
   .section-index {
@@ -1018,6 +1090,36 @@
   @keyframes label-line {
     from { transform: scaleX(0); opacity: 0; }
     to { transform: scaleX(1); opacity: 1; }
+  }
+
+  .role.reveal-row {
+    animation: row-reveal .65s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  .award.reveal-row {
+    animation: award-reveal .75s cubic-bezier(.2,.7,.2,1) both;
+  }
+
+  @keyframes row-reveal {
+    from {
+      opacity: 0;
+      transform: translateX(15px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes award-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .hero-kicker::before {
@@ -1048,6 +1150,13 @@
 
     .contact-link {
       transition: none;
+    }
+
+    .role.reveal-row,
+    .award.reveal-row {
+      animation: none;
+      opacity: 1;
+      transform: none;
     }
   }
 
@@ -1153,9 +1262,24 @@
       grid-template-columns: 1fr;
     }
 
+    .award-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 34px;
+    }
+
+    .award-grid > div {
+      display: contents;
+    }
+
+    .award,
     .award:nth-child(n) {
-      margin-top: 0;
       width: 100%;
+      margin-top: 0;
+    }
+
+    .award + .award {
+      margin-top: 0;
     }
 
     .contact-heading {
@@ -1184,6 +1308,12 @@
     .footer-line {
       flex-direction: column;
       gap: 8px;
+      align-items: flex-start;
+    }
+
+    .footer-logo {
+      width: 44px;
+      height: 25px;
     }
   }
 
@@ -1465,7 +1595,7 @@
       <div class="footer-line">
         <span>© 2026 Grace Abboud</span>
         <span>Fashion Design / Portfolio</span>
-        <span>G / A</span>
+        <img class="footer-logo" src="GAA-logo.png" alt="GAA monogram">
       </div>
     </div>
   </section>
@@ -1507,17 +1637,36 @@
     });
   }
 
+  function replayRows(section) {
+    const rows = [...section.querySelectorAll('.role, .award')];
+    rows.forEach(row => row.classList.remove('reveal-row'));
+    rows.forEach((row, index) => {
+      row.style.animationDelay = `${index * 90}ms`;
+      void row.offsetWidth;
+      row.classList.add('reveal-row');
+    });
+  }
+
   const motionObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       const els = animatedBySection[entry.target.id];
       if (!els) return;
 
       if (entry.isIntersecting) {
-        resetAndReplay(els.map(selector => entry.target.querySelector(selector)).filter(Boolean));
+        resetAndReplay(
+          els.map(selector => entry.target.querySelector(selector)).filter(Boolean)
+        );
+        if (entry.target.id === 'experience' || entry.target.id === 'awards') {
+          replayRows(entry.target);
+        }
       } else {
         els.forEach(selector => {
           const el = entry.target.querySelector(selector);
           if (el) el.classList.remove('reveal');
+        });
+        entry.target.querySelectorAll('.reveal-row').forEach(row => {
+          row.classList.remove('reveal-row');
+          row.style.animationDelay = '';
         });
       }
     });
